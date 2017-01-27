@@ -29,9 +29,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
-ADMINS = (
-    ('Gileno', 'contato@gilenofilho.com.br'),
-)
 
 # Application definition
 
@@ -44,17 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # libs
     'widget_tweaks',
-    'easy_thumbnails',
-    'paypal.standard.ipn',
-    'watson',
     # apps
     'core',
-    'accounts',
     'catalog',
-    'checkout',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,8 +56,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'checkout.middleware.cart_item_middleware',
 ]
 
 ROOT_URLCONF = 'djangoecommerce.urls'
@@ -139,121 +129,20 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/media/'
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 ALLOWED_HOSTS = ['*']
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 # E-mail
 EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'admin@djangoecommerce.com'
-
-# auth
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'index'
-LOGOUT_URL = 'logout'
-AUTH_USER_MODEL = 'accounts.User'
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'accounts.backends.ModelBackend',
-)
-
-# Messages
-from django.contrib.messages import constants as messages_constants
-MESSAGE_TAGS = {
-    messages_constants.DEBUG: 'debug',
-    messages_constants.INFO: 'info',
-    messages_constants.SUCCESS: 'success',
-    messages_constants.WARNING: 'warning',
-    messages_constants.ERROR: 'danger',
-}
-
-PAGSEGURO_TOKEN = ''
-PAGSEGURO_EMAIL = 'contato@gilenofilho.com.br'
-PAGSEGURO_SANDBOX = True
-
-PAYPAL_TEST = True
-PAYPAL_EMAIL = 'contato@gilenofilho.com.br'
-
-# AWS
-STATICFILES_LOCATION = 'static'
-MEDIAFILES_LOCATION = 'media'
-
-AWS_S3_SECURE_URLS = True
-AWS_QUERYSTRING_AUTH = False
-AWS_PRELOAD_METADATA = True
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', '')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', '')
-AWS_STORAGE_BUCKET_NAME = 'djangoecommerce'
-AWS_S3_CUSTOM_DOMAIN = 's3.amazonaws.com/%s' % AWS_STORAGE_BUCKET_NAME
-
-STATICFILES_STORAGE = 'djangoecommerce.s3util.StaticStorage'
-STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
-
-DEFAULT_FILE_STORAGE = 'djangoecommerce.s3util.MediaStorage'
-MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
-
-AWS_HEADERS = {
-    'x-amz-acl': 'public-read',
-    'Cache-Control': 'public, max-age=31556926'
-}
-
-# Thumbnails
-THUMBNAIL_ALIASES = {
-    '': {
-        'product_image': {'size': (285, 160), 'crop': True},
-    },
-}
-THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
-
-# cache
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cache',
-    }
-}
-
-# Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'handlers': {
-        'checkout.views': {
-            'class': 'logging.FileHandler',
-            'level': 'DEBUG',
-            'filters': ['require_debug_true'],
-            'filename': os.path.join(BASE_DIR, 'checkout.views.log'),
-        }
-    },
-    'loggers': {
-        'checkout.views': {
-            'handlers': ['checkout.views'],
-            'level': 'DEBUG',
-        }
-    }
-}
 
 try:
     from .local_settings import *
