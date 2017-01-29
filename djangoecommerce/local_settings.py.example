@@ -1,6 +1,7 @@
+# coding=utf-8
+
 import os
 
-DEBUG = True
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -10,40 +11,3 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'checkout.middleware.cart_item_middleware',
-]
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
-
-'''
-heroku config:set EMAIL_HOST_PASSWORD=<SENHA>
-
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'mailcontactadm@gmail.com'
-EMAIL_HOST_PASSWORD = 'contact123'
-DEFAULT_FROM_EMAIL = 'mailcontactadm@gmail.com'
-'''
