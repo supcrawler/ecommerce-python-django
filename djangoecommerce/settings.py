@@ -171,12 +171,12 @@ MESSAGE_TAGS = {
     messages_constants.ERROR: 'danger',
 }
 
-PAGSEGURO_TOKEN = ''
-PAGSEGURO_EMAIL = 'contato@gilenofilho.com.br'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+PAGSEGURO_TOKEN = os.getenv('PAGSEGURO_TOKEN', '')
 PAGSEGURO_SANDBOX = True
 
 PAYPAL_TEST = True
-PAYPAL_EMAIL = 'contato@gilenofilho.com.br'
+PAYPAL_EMAIL = os.getenv('EMAIL_HOST_PASSWORD', '')
 
 try:
     from .local_settings import *
